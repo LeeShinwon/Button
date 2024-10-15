@@ -1,0 +1,24 @@
+{
+  "originHash" : "2ad526d82debadd3f2435c535a376bdc335212a2931bfb66bb8f40d3a7f2c5f0",
+  "pins" : [
+    {
+      "identity" : "bottomsheet",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lucaszischka/BottomSheet",
+      "state" : {
+        "revision" : "720ddbd1371fef2a09cc1ab65fc503df37767f9c",
+        "version" : "3.1.1"
+      }
+    },
+    {
+      "identity" : "flic2lib-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/50ButtonsEach/flic2lib-ios",
+      "state" : {
+        "branch" : "master",
+        "revision" : "467948343266a77d8e9ab5921afba7933bcb91c6"
+      }
+    }
+  ],
+  "version" : 3
+}
