@@ -12,9 +12,10 @@ struct ButtonList: View {
     
     var body: some View {
         if (viewModel.buttons.count == 0) {
-            HStack {
+            VStack {
                 Spacer()
                 Text("연결된 버튼이 없습니다.").foregroundColor(.gray)
+                Spacer()
                 Spacer()
             }
         } else {
@@ -25,11 +26,11 @@ struct ButtonList: View {
                 let connection = button.pushed ? "눌림" : button.connected ? "연결됨" : "연결 안됨"
                 HStack{
                     Circle()
-                        .frame(width: 35, height: 35)
+                        .frame(width: 30, height: 30)
                         .foregroundColor(.white)
                         .overlay(
                             Text("🏀")
-                                .font(.title)
+//                                .font(.title3)
                         )
                         .overlay(
                             Circle()
@@ -46,13 +47,17 @@ struct ButtonList: View {
                     Text(connection)
                         .foregroundColor(.gray)
                 }
+                .listRowBackground(Color.clear)
                 .padding(5)
+                
                 .onTapGesture {
                     viewModel.buttonToBeRemoved = button
                     viewModel.promptToRemoveButton = true
                 }
+                
             }
-            .listStyle(InsetGroupedListStyle())
+            .scrollContentBackground(.hidden)
+            .listStyle(PlainListStyle())
             .alert(isPresented: $viewModel.promptToRemoveButton) {
                 Alert(title: Text("Remove"), message: Text("Do you want to remove this button?"), primaryButton: .destructive(Text("Remove")) {
                     if let buttonToBeRemoved = viewModel.buttonToBeRemoved {

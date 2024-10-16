@@ -7,6 +7,7 @@
 
 import SwiftUI
 import flic2lib
+import AudioToolbox
 
 class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDelegate {
     
@@ -81,6 +82,13 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
         print("didReceiveButtonDown")
         if let index = indexOf(flicButton) {
             buttons[index].pushed = true
+//            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+//            
+            if UserDefaults.standard.bool(forKey: "isVibrationEnabled") {
+                print("yy")
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            }
+            
         }
     }
     

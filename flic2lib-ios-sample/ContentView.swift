@@ -50,10 +50,11 @@ struct ContentView: View {
                         }
                         .padding()
                     }) {
-//                        Divider()
+                        Divider()
                         ButtonList()
+                            
                     }
-//                    .customBackground(Color.white.cornerRadius(20))
+                    .customBackground(Color(UIColor.systemGray6).cornerRadius(10))
                     .tabItem {
                         Label("로그", systemImage: "button.programmable")
                     }
@@ -66,15 +67,13 @@ struct ContentView: View {
                     .tabItem {
                         Label("설정", systemImage: "gearshape")
                     }
+                   
                 }
-//                .toolbarBackground(.white, for: .tabBar)
                 .toolbarBackground(.visible, for: .tabBar)
                 
             }
 
         }.environmentObject(viewModel)
-        
-        // for the preview
 	}
 }
 
