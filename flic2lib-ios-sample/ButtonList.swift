@@ -21,16 +21,15 @@ struct ButtonList: View {
         } else {
             
             List(viewModel.buttons, id:\.identifier) { button in
-                let color: Color = button.pushed ? .blue : button.connected ? .green : .yellow
+                let color: Color = button.pushed ? .blue : button.connected ? .green : .gray
                 
                 let connection = button.pushed ? "눌림" : button.connected ? "연결됨" : "연결 안됨"
                 HStack{
                     Circle()
                         .frame(width: 30, height: 30)
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(UIColor.systemBackground))
                         .overlay(
                             Text("🏀")
-//                                .font(.title3)
                         )
                         .overlay(
                             Circle()
@@ -38,6 +37,8 @@ struct ButtonList: View {
                         )
                     
                     Text(button.name ?? "My Flic")
+
+                    
                     
                     Spacer()
                     
@@ -46,6 +47,8 @@ struct ButtonList: View {
                         .foregroundColor(color)
                     Text(connection)
                         .foregroundColor(.gray)
+                    
+                    ButtonBattery(batteryVoltage: button.batteryVoltage ?? 0, buttonConnected: button.connected)
                 }
                 .listRowBackground(Color.clear)
                 .padding(5)
@@ -53,6 +56,7 @@ struct ButtonList: View {
                 .onTapGesture {
                     viewModel.buttonToBeRemoved = button
                     viewModel.promptToRemoveButton = true
+                    viewModel.selectedButton = button.identifier
                 }
                 
             }

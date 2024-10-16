@@ -20,6 +20,12 @@ struct LogList: View {
                 Text("오전 10:16")
                     .foregroundColor(.gray)
                     .font(.caption)
+                
+                Button(action: {}) {
+                    Image(systemName: "ellipsis")
+                        .rotationEffect(.degrees(90))
+                        .foregroundColor(.gray)
+                }
             }
             
             HStack {

@@ -21,6 +21,7 @@
 		DA41B47E2CBD79E100BDD084 /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA41B47D2CBD79E100BDD084 /* AddButton.swift */; };
 		DA41B4952CBF0D1400BDD084 /* ButtonIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA41B4942CBF0D1400BDD084 /* ButtonIcon.swift */; };
 		DA41B4972CBF0D7800BDD084 /* LogList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA41B4962CBF0D7800BDD084 /* LogList.swift */; };
+		DA6DBBD42CBF8C2200F7D457 /* ButtonBattery.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6DBBD32CBF8C2200F7D457 /* ButtonBattery.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		DA41B47D2CBD79E100BDD084 /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
 		DA41B4942CBF0D1400BDD084 /* ButtonIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonIcon.swift; sourceTree = "<group>"; };
 		DA41B4962CBF0D7800BDD084 /* LogList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogList.swift; sourceTree = "<group>"; };
+		DA6DBBD32CBF8C2200F7D457 /* ButtonBattery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonBattery.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 				753475C72B76292C00D1ED5B /* Assets.xcassets */,
 				753475C92B76292C00D1ED5B /* Preview Content */,
 				DA41B4482CBD4A0F00BDD084 /* ButtonList.swift */,
+				DA6DBBD32CBF8C2200F7D457 /* ButtonBattery.swift */,
 			);
 			path = "flic2lib-ios-sample";
 			sourceTree = "<group>";
@@ -192,6 +195,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA41B4492CBD4A0F00BDD084 /* ButtonList.swift in Sources */,
+				DA6DBBD42CBF8C2200F7D457 /* ButtonBattery.swift in Sources */,
 				DA41B4792CBD713500BDD084 /* Button.swift in Sources */,
 				DA41B4972CBF0D7800BDD084 /* LogList.swift in Sources */,
 				753475C62B76292B00D1ED5B /* ContentView.swift in Sources */,

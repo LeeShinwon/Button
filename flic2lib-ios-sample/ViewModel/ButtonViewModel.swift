@@ -17,11 +17,27 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
     @Published var isScanning: Bool = false
     @Published var scanState: FLICButtonScannerStatusEvent? = nil
     
+    @Published var selectedButton: UUID?
+    @Published var buttonPressHistory: [UUID: [ButtonPressRecord]] = [:]
+    
+    enum PressType: String {
+        case push
+        case doublePush
+        case hold
+    }
+    
+    struct ButtonPressRecord {
+        let pressType: PressType
+        let timestamp: Date
+    }
+    
     struct Button {
         let identifier: UUID
         var name: String?
+        var emoji: String = "🔘"
         var pushed: Bool = false
         var connected: Bool = false
+        var batteryVoltage: Float?
         
         init(_ flicButton: FLICButton) {
             self.identifier = flicButton.identifier
@@ -44,6 +60,13 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
         if (!preview) {
             FLICManager.configure(with:self, buttonDelegate: self, background: true)
         }
+        if let firstButton = buttons.first {
+            self.selectedButton = firstButton.identifier
+        }
+    }
+    
+    func getSelectedButton() -> Button? {
+        return buttons.first(where: { $0.identifier == selectedButton })
     }
 
     func buttonDidConnect(_ flicButton: FLICButton) {
@@ -82,21 +105,57 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
         print("didReceiveButtonDown")
         if let index = indexOf(flicButton) {
             buttons[index].pushed = true
-//            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-//            
+ 
             if UserDefaults.standard.bool(forKey: "isVibrationEnabled") {
-                print("yy")
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
             }
             
         }
     }
     
+    func button(_ flicButton: FLICButton, didReceiveButtonDoubleClick queued: Bool, age: Int) {
+        print("didReceiveButtonDoubleClick")
+        if let index = indexOf(flicButton) {
+            let button = buttons[index]
+            let pressRecord = ButtonPressRecord(pressType: .doublePush, timestamp: Date())
+            buttonPressHistory[button.identifier, default: []].append(pressRecord)
+        }
+    }
+    
+    func button(_ flicButton: FLICButton, didReceiveButtonHold queued: Bool, age: Int) {
+        print("didReceiveButtonHold")
+        if let index = indexOf(flicButton) {
+            let button = buttons[index]
+            let pressRecord = ButtonPressRecord(pressType: .hold, timestamp: Date())
+            buttonPressHistory[button.identifier, default: []].append(pressRecord)
+        }
+    }
+    
+    func button(_ flicButton: FLICButton, didReceiveButtonClick queued: Bool, age: Int) {
+        print("didReceiveButtonClick")
+        if let index = indexOf(flicButton) {
+            let button = buttons[index]
+            let pressRecord = ButtonPressRecord(pressType: .push, timestamp: Date())
+            buttonPressHistory[button.identifier, default: []].append(pressRecord)
+        }
+    }
+
+    
     func button(_ flicButton: FLICButton, didReceiveButtonUp queued: Bool, age: Int) {
         print("didReceiveButtonUp")
         if let index = indexOf(flicButton) {
             buttons[index].pushed = false
         }
+    }
+    
+    func button(_ flicButton: FLICButton, didUpdateBatteryVoltage voltage: Float) {
+        if let index = indexOf(flicButton) {
+            buttons[index].batteryVoltage = voltage
+        }
+    }
+    
+    func button(_ flicButton: FLICButton, didUpdateNickname nickname: String) {
+        
     }
     
     func indexOf(_ flicButton: FLICButton) -> Int?{
@@ -128,6 +187,7 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
             self.buttons = buttons
         }
     }
+
     
     func removeButton(_ button: ViewModel.Button) {
         if let flicButton = FLICManager.shared()?.buttons().first(where: { $0.identifier == button.identifier }) {

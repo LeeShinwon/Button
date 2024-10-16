@@ -22,12 +22,7 @@ struct Log: View {
         return formatter
     }
     
-    @State private var sortingOption: SortingOption = .newest
-
-        enum SortingOption: String, CaseIterable {
-            case newest = "최신순"
-            case oldest = "오래된순"
-        }
+    
     
     var body: some View {
         
@@ -38,74 +33,35 @@ struct Log: View {
                     .fill(Color(UIColor.systemGray6))
                     .frame(height: 100)
                 
-                HStack {
-                    Circle()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(Color(UIColor.systemBackground))
-                        .overlay(
-                            Text("🏀")
-                                .font(.title)
-                        )
-                        .overlay(
-                            Circle()
-                                .stroke(.gray.opacity(0.2), lineWidth: 2)
-                        )
-                    Text("농구")
-                        .font(.title2)
-                        .fontWeight(.semibold)
+                if let selectedButton = viewModel.getSelectedButton() {
+                    HStack {
+                        Circle()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(Color(UIColor.systemBackground))
+                            .overlay(
+                                Text(selectedButton.emoji)
+                                    .font(.title)
+                            )
+                            .overlay(
+                                Circle()
+                                    .stroke(.gray.opacity(0.2), lineWidth: 2)
+                            )
+                        Text(selectedButton.name ?? "\(selectedButton.identifier)")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                        
+                        Spacer()
+                        
+                        Text(selectedButton.connected ? "연결됨" : "연결안됨")
+                            .foregroundColor(.gray)
                     
-                    Spacer()
-                    
-                    Text("연결됨")
-                        .foregroundColor(.gray)
-                
+                    }
+                    .padding()
                 }
-                .padding()
+                
             }
             .padding(.bottom)
-            
-//            HStack {
-//                Button(action: {
-//                    showDatePicker = true
-//                    
-//                }) {
-//                    Text(dateFormatter.string(from: selectedDate))
-//                }
-//                
-//                Spacer()
-//                
-//                
-//                Button(action: {
-//                    
-//                    
-//                }) {
-//                    Text("최신순")
-//                        .foregroundColor(.gray)
-//                    
-//                }
-//                
-//                Text("|")
-//                Button(action: {
-//                    
-//                    
-//                }) {
-//                    Text("최신순")
-//                        .foregroundColor(.black)
-//                    
-//                }
-//
-                
-                
-//                Picker("정렬 기준", selection: $sortingOption) {
-//                    ForEach(SortingOption.allCases, id: \.self) { option in
-//                        Text(option.rawValue)
-//                    }
-//                }
-//                .pickerStyle(SegmentedPickerStyle()) // 세그먼트 컨트롤 스타일
-//                .frame(width: 200)
-//                .padding(.vertical)
-     
-//            }
+        
             
             LogList()
            
