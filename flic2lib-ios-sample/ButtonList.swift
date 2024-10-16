@@ -29,7 +29,7 @@ struct ButtonList: View {
                         .frame(width: 30, height: 30)
                         .foregroundColor(Color(UIColor.systemBackground))
                         .overlay(
-                            Text("🏀")
+                            Text(button.emoji)
                         )
                         .overlay(
                             Circle()
@@ -62,13 +62,13 @@ struct ButtonList: View {
             }
             .scrollContentBackground(.hidden)
             .listStyle(PlainListStyle())
-            .alert(isPresented: $viewModel.promptToRemoveButton) {
-                Alert(title: Text("Remove"), message: Text("Do you want to remove this button?"), primaryButton: .destructive(Text("Remove")) {
-                    if let buttonToBeRemoved = viewModel.buttonToBeRemoved {
-                        viewModel.removeButton(buttonToBeRemoved)
-                    }
-                }, secondaryButton: .default(Text("Cancel")))
-            }
+//            .alert(isPresented: $viewModel.promptToRemoveButton) {
+//                Alert(title: Text("Remove"), message: Text("Do you want to remove this button?"), primaryButton: .destructive(Text("Remove")) {
+//                    if let buttonToBeRemoved = viewModel.buttonToBeRemoved {
+//                        viewModel.removeButton(buttonToBeRemoved)
+//                    }
+//                }, secondaryButton: .default(Text("Cancel")))
+//            }
         }
     }
 }

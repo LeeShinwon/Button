@@ -72,10 +72,6 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
         if (!preview) {
             FLICManager.configure(with:self, buttonDelegate: self, background: true)
             loadButtonPressHistory()
-            
-            if let firstButton = buttons.first {
-                self.selectedButton = firstButton.identifier
-            }
         }
     }
     
@@ -194,6 +190,7 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
 
     
     func button(_ flicButton: FLICButton, didUpdateBatteryVoltage voltage: Float) {
+        print("visit", flicButton.identifier)
         if let index = indexOf(flicButton) {
             buttons[index].batteryVoltage = voltage
         }
@@ -230,6 +227,10 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
                 }
             }
             self.buttons = buttons
+            
+            if let firstButton = self.buttons.first {
+                self.selectedButton = firstButton.identifier
+            }
         }
     }
 
