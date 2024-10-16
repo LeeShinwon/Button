@@ -60,19 +60,18 @@ struct Log: View {
                 }
                 
             }
-            .padding(.bottom)
+            .padding(.vertical)
         
             
-            LogList()
+            LogList(selectedDate: $selectedDate)
            
             
             
-            Spacer()
-            
+            Spacer(minLength: UIScreen.main.bounds.height * 0.1)
             
             
         }
-        .padding()
+        .padding(.horizontal)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {

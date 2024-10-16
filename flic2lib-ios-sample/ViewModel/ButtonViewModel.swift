@@ -9,6 +9,14 @@ import SwiftUI
 import flic2lib
 import AudioToolbox
 
+
+enum PressType: String, Codable {
+    case push
+    case doublePush
+    case hold
+}
+
+
 class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDelegate {
     
     @Published var buttons: [Button] = []
@@ -19,18 +27,22 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
     
     @Published var selectedButton: UUID?
     @Published var buttonPressHistory: [UUID: [ButtonPressRecord]] = [:]
+
     
-    enum PressType: String {
-        case push
-        case doublePush
-        case hold
-    }
-    
-    struct ButtonPressRecord {
+    struct ButtonPressRecord: Identifiable, Codable {
+        let id: UUID // 초기값 제거
         let pressType: PressType
         let timestamp: Date
+
+        // 초기화를 위한 생성자 추가 (선택 사항)
+        init(id: UUID = UUID(), pressType: PressType, timestamp: Date) {
+            self.id = id
+            self.pressType = pressType
+            self.timestamp = timestamp
+        }
     }
-    
+
+
     struct Button {
         let identifier: UUID
         var name: String?
@@ -59,14 +71,21 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
         super.init()
         if (!preview) {
             FLICManager.configure(with:self, buttonDelegate: self, background: true)
-        }
-        if let firstButton = buttons.first {
-            self.selectedButton = firstButton.identifier
+            loadButtonPressHistory()
+            
+            if let firstButton = buttons.first {
+                self.selectedButton = firstButton.identifier
+            }
         }
     }
     
     func getSelectedButton() -> Button? {
         return buttons.first(where: { $0.identifier == selectedButton })
+    }
+    
+    func getSelectedButtonHistory() -> [ButtonPressRecord] {
+        guard let selectedButton = selectedButton else { return [] }
+        return buttonPressHistory[selectedButton] ?? []
     }
 
     func buttonDidConnect(_ flicButton: FLICButton) {
@@ -113,12 +132,42 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
         }
     }
     
+    func button(_ flicButton: FLICButton, didReceiveButtonUp queued: Bool, age: Int) {
+        print("didReceiveButtonUp")
+        if let index = indexOf(flicButton) {
+            buttons[index].pushed = false
+        }
+    }
+    
+    func saveButtonPressHistory() {
+        do {
+            let data = try JSONEncoder().encode(buttonPressHistory)
+            UserDefaults.standard.set(data, forKey: "buttonPressHistory")
+        } catch {
+            print("버튼 기록 저장 실패: \(error)")
+        }
+    }
+    
+    func loadButtonPressHistory() {
+        if let data = UserDefaults.standard.data(forKey: "buttonPressHistory") {
+            do {
+                let decodedHistory = try JSONDecoder().decode([UUID: [ButtonPressRecord]].self, from: data)
+                buttonPressHistory = decodedHistory
+            } catch {
+                print("버튼 기록 불러오기 실패: \(error)")
+            }
+        }
+    }
+
+
+    
     func button(_ flicButton: FLICButton, didReceiveButtonDoubleClick queued: Bool, age: Int) {
         print("didReceiveButtonDoubleClick")
         if let index = indexOf(flicButton) {
             let button = buttons[index]
             let pressRecord = ButtonPressRecord(pressType: .doublePush, timestamp: Date())
             buttonPressHistory[button.identifier, default: []].append(pressRecord)
+            saveButtonPressHistory()
         }
     }
     
@@ -128,6 +177,7 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
             let button = buttons[index]
             let pressRecord = ButtonPressRecord(pressType: .hold, timestamp: Date())
             buttonPressHistory[button.identifier, default: []].append(pressRecord)
+            saveButtonPressHistory()
         }
     }
     
@@ -137,16 +187,11 @@ class ViewModel : NSObject, ObservableObject, FLICButtonDelegate, FLICManagerDel
             let button = buttons[index]
             let pressRecord = ButtonPressRecord(pressType: .push, timestamp: Date())
             buttonPressHistory[button.identifier, default: []].append(pressRecord)
+            saveButtonPressHistory()
         }
     }
 
-    
-    func button(_ flicButton: FLICButton, didReceiveButtonUp queued: Bool, age: Int) {
-        print("didReceiveButtonUp")
-        if let index = indexOf(flicButton) {
-            buttons[index].pushed = false
-        }
-    }
+
     
     func button(_ flicButton: FLICButton, didUpdateBatteryVoltage voltage: Float) {
         if let index = indexOf(flicButton) {
